@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "r.dem: GRASS addon toolbox for DEM co-registration, differencing, and topographic change analysis"
+type: software
+authors:
+  - family-names: White
+    given-names: Corey T.
+    orcid: https://orcid.org/0000-0002-2903-9924
+    affiliation: Center for Geospatial Analytics, North Carolina State University
+license: GPL-2.0-or-later
+repository-code: https://github.com/cwhite911/r.dem
+version: 1.0.0
