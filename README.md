@@ -1,6 +1,6 @@
 # r.dem - GRASS Addon Toolset for Topographic Change Analysis
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21940777.svg)](https://doi.org/10.5281/zenodo.21940777)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21940875.svg)](https://doi.org/10.5281/zenodo.21940875)
 
 Archive snapshot of the r.dem toolset for citation (Zenodo DOI).
 
