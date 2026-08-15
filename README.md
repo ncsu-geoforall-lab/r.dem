@@ -51,12 +51,6 @@ grass -c $GRASSDATA/nc_spm_full_v2alpha2/rdem_test --exec \
     python -m unittest discover -s src/testsuite
 ```
 
-## Credits
-
-The methods in `r.dem.stats`, `r.dem.bias`, and `r.dem.errprop` derive from
-GRASS scripts by Helena Mitasova, Center for Geospatial Analytics, NC State
-University, credited in each of those manual pages.
-
 ## Updating the snapshot
 
 ```bash
