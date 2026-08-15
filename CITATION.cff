@@ -41,8 +41,8 @@ identifiers:
 license: GPL-2.0-or-later
 repository-code: https://github.com/ncsu-geoforall-lab/r.dem
 url: https://github.com/ncsu-geoforall-lab/r.dem
-version: 1.0.0
-date-released: 2026-08-14
+version: 1.0.1
+date-released: 2026-08-15
 references:
   - type: article
     title: "Volumetric Change Detection with SfM Photogrammetry from Rapid-Response Aerial Imagery after Hurricane Helene"
