@@ -1,5 +1,7 @@
 # r.dem - GRASS Addon Toolset for Topographic Change Analysis
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21940777.svg)](https://doi.org/10.5281/zenodo.21940777)
+
 Archive snapshot of the r.dem toolset for citation (Zenodo DOI).
 
 The canonical, maintained source lives in the OSGeo grass-addons
@@ -66,7 +68,13 @@ git push --follow-tags
 
 ## Citation
 
-See `CITATION.cff`. The associated manuscript is White, C.T., Regmi, P.,
+Cite the version you used. This release is
+[10.5281/zenodo.21940777](https://doi.org/10.5281/zenodo.21940777); the
+concept DOI [10.5281/zenodo.21940776](https://doi.org/10.5281/zenodo.21940776)
+always resolves to the latest release. Machine-readable metadata is in
+`CITATION.cff`.
+
+The associated manuscript is White, C.T., Regmi, P.,
 Reckling, W., and Mitasova, H. (in preparation), Volumetric Change
 Detection with SfM Photogrammetry from Rapid-Response Aerial Imagery after
 Hurricane Helene, Remote Sensing (MDPI).
