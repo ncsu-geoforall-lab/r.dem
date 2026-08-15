@@ -1,0 +1,8 @@
+# Build artifacts from compiling the C tools in place
+OBJ.*/
+*.o
+
+# Python
+__pycache__/
+*.pyc
+.ruff_cache/

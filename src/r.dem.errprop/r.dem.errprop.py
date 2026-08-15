@@ -6,7 +6,7 @@
 # AUTHOR(S): Corey T. White <smortopahri@gmail.com>
 #
 # PURPOSE:   Propagate per-source vertical uncertainty into a DEM of
-#            Difference (DoD) and derive Level of Detection, t/p significance,
+#            Difference (DoD) and derive Level of Detection, z/p significance,
 #            and categorical erosion/deposition significance classes.
 #
 # COPYRIGHT: (C) 2025 by Corey T. White and the GRASS Development Team
@@ -35,6 +35,14 @@
 # % required: yes
 # %end
 
+# %option
+# % key: sigma_const
+# % type: double
+# % multiple: yes
+# % description: Constant 1-sigma terms (meters) added in quadrature with the sigma rasters
+# % required: no
+# %end
+
 # %option G_OPT_R_OUTPUT
 # % key: output_sigma
 # % description: Output propagated DoD uncertainty raster (sqrt of summed squares)
@@ -48,8 +56,8 @@
 # %end
 
 # %option G_OPT_R_OUTPUT
-# % key: output_tvalue
-# % description: Output t-value raster (|DoD| / sigma)
+# % key: output_zscore
+# % description: Output z-score raster (|DoD| / sigma)
 # % required: no
 # %end
 
@@ -117,13 +125,18 @@ def z_from_confidence(confidence):
     return float(norm.ppf((1.0 + confidence) / 2.0))
 
 
-def propagate_sigma(sigma_maps, output):
+def propagate_sigma(sigma_maps, output, sigma_const=()):
     """Combine uncertainty sources in quadrature: sqrt(sum(sigma_i^2)).
 
     NULL in any source propagates to NULL in the result so that the DoD
-    uncertainty is only defined where every source is defined.
+    uncertainty is only defined where every source is defined. Scalar
+    sigma_const terms enter the same quadrature. The sources must be
+    independent of the DoD being tested (deriving sigma from the DoD
+    itself suppresses significance exactly where change is real).
     """
-    terms = " + ".join(f"pow({m}, 2)" for m in sigma_maps)
+    parts = [f"pow({m}, 2)" for m in sigma_maps]
+    parts += [f"pow({float(c):.17g}, 2)" for c in sigma_const]
+    terms = " + ".join(parts)
     not_null = " && ".join(f"!isnull({m})" for m in sigma_maps)
     expr = f"{output} = if({not_null}, sqrt({terms}), null())"
     gs.mapcalc(expr, overwrite=gs.overwrite())
@@ -150,14 +163,19 @@ def calc_lod(sigma_dod, output, confidence):
     return output
 
 
-def calc_tvalue(dod, sigma_dod, output):
-    """t = |DoD| / sigma_dod, undefined where sigma <= 0."""
+def calc_zscore(dod, sigma_dod, output):
+    """z = |DoD| / sigma_dod, undefined where sigma <= 0.
+
+    Because sigma is treated as known the statistic is z-based rather than
+    Student-t; the output is the absolute z-score |z| (sign of change
+    discarded), half-normal under no change.
+    """
     expr = (
         f"{output} = if(!isnull({sigma_dod}) && {sigma_dod} > 0, "
         f"abs({dod}) / {sigma_dod}, null())"
     )
     gs.mapcalc(expr, overwrite=gs.overwrite())
-    gs.run_command("r.support", map=output, title="DoD t-value (|DoD|/sigma)")
+    gs.run_command("r.support", map=output, title="DoD z-score (|DoD|/sigma)")
     return output
 
 
@@ -215,10 +233,12 @@ def calc_pvalue_student(dod, sigma_dod, output, df):
     from grass.script import array as garray
     from scipy.stats import t as student_t
 
-    t_map = f"tmp_errprop_t_student_{os.getpid()}"
-    TMP_RASTERS.append(t_map)
-    calc_tvalue(dod, sigma_dod, t_map)
-    t_arr = garray.array(t_map)
+    # Under pmethod=student the standardized magnitude |DoD|/sigma is
+    # referred to the Student-t distribution with df degrees of freedom.
+    std_map = gs.append_node_pid("tmp_errprop_std")
+    TMP_RASTERS.append(std_map)
+    calc_zscore(dod, sigma_dod, std_map)
+    t_arr = garray.array(std_map)
     out_arr = garray.array()
     out_arr[...] = np.clip(2.0 * student_t.sf(np.asarray(t_arr), df), 0.0, 1.0)
     out_arr.write(mapname=output, overwrite=gs.overwrite())
@@ -233,7 +253,7 @@ def calc_pvalue_student(dod, sigma_dod, output, df):
 def calc_categorical(dod, sigma_dod, output):
     """Nine-class erosion/deposition significance map.
 
-    Each cell is labelled by the highest confidence level (68/90/95/99%) at
+    Each cell is labeled by the highest confidence level (68/90/95/99%) at
     which |DoD| exceeds the corresponding LoD, signed by the DoD direction.
     """
     levels = [(0.99, 4), (0.95, 3), (0.90, 2), (0.68, 1)]
@@ -290,27 +310,40 @@ def main():
     sigma_maps = options["sigma"].split(",")
     output_sigma = options["output_sigma"]
     output_lod = options["output_lod"]
-    output_tvalue = options["output_tvalue"]
+    output_zscore = options["output_zscore"]
     output_pvalue = options["output_pvalue"]
     output_class = options["output_class"]
     confidence = float(options["confidence"])
     pmethod = options["pmethod"]
     df = options["df"]
 
+    # The parser range admits the endpoints, but norm.ppf is infinite at 1
+    # and zero at 0.5, so the open interval is enforced here (matching
+    # r.dem.lod).
+    if not 0.0 < confidence < 1.0:
+        gs.fatal(_("Option confidence must be strictly between 0 and 1"))
+
     for name in [dod] + sigma_maps:
         if not gs.find_file(name, element="raster")["name"]:
             gs.fatal(_("Raster map <{}> not found").format(name))
 
+    # Validated in Python because a %rules block cannot express a
+    # value-conditional requirement (df only when pmethod=student).
     if pmethod == "student" and output_pvalue and not df:
         gs.fatal(_("Option df is required when pmethod=student"))
 
-    propagate_sigma(sigma_maps, output_sigma)
+    sigma_const = (
+        [float(v) for v in options["sigma_const"].split(",")]
+        if options["sigma_const"]
+        else []
+    )
+    propagate_sigma(sigma_maps, output_sigma, sigma_const)
     gs.message(_("Propagated DoD uncertainty: <{}>").format(output_sigma))
 
     if output_lod:
         calc_lod(output_sigma, output_lod, confidence)
-    if output_tvalue:
-        calc_tvalue(dod, output_sigma, output_tvalue)
+    if output_zscore:
+        calc_zscore(dod, output_sigma, output_zscore)
     if output_pvalue:
         if pmethod == "student":
             calc_pvalue_student(dod, output_sigma, output_pvalue, int(df))

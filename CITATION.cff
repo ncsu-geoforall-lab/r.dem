@@ -1,12 +1,53 @@
 cff-version: 1.2.0
 message: If you use this software, please cite it as below.
-title: "r.dem: GRASS addon toolbox for DEM co-registration, differencing, and topographic change analysis"
+title: "r.dem: GRASS addon toolset for DEM co-registration, differencing, and topographic change analysis"
+abstract: >-
+  r.dem is a toolset of nine GRASS addon tools for topographic change
+  analysis from pairs of digital elevation models, such as a post-event
+  photogrammetric surface against a pre-event lidar reference. It covers
+  co-registration (pseudo ground control points, Nuth and Kaab, and
+  iterative closest point), systematic bias removal, DEM of difference
+  computation with volumetric summary, level of detection, uncertainty
+  propagation, and regional change screening.
 type: software
 authors:
   - family-names: White
     given-names: Corey T.
     orcid: https://orcid.org/0000-0002-2903-9924
     affiliation: Center for Geospatial Analytics, North Carolina State University
+contact:
+  - family-names: White
+    given-names: Corey T.
+    orcid: https://orcid.org/0000-0002-2903-9924
+keywords:
+  - GRASS
+  - digital elevation model
+  - co-registration
+  - DEM of difference
+  - level of detection
+  - topographic change
+  - structure from motion
+  - photogrammetry
+  - uncertainty propagation
+  - geomorphology
 license: GPL-2.0-or-later
-repository-code: https://github.com/cwhite911/r.dem
+repository-code: https://github.com/ncsu-geoforall-lab/r.dem
+url: https://github.com/ncsu-geoforall-lab/r.dem
 version: 1.0.0
+date-released: 2026-08-14
+references:
+  - type: article
+    title: "Volumetric Change Detection with SfM Photogrammetry from Rapid-Response Aerial Imagery after Hurricane Helene"
+    authors:
+      - family-names: White
+        given-names: Corey T.
+      - family-names: Regmi
+        given-names: Pratikshya
+      - family-names: Reckling
+        given-names: William
+      - family-names: Mitasova
+        given-names: Helena
+    journal: Remote Sensing
+    publisher:
+      name: MDPI
+    notes: In preparation. This toolset was developed for the analysis reported there.

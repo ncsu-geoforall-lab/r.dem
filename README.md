@@ -1,16 +1,30 @@
-# r.dem - GRASS Addon Toolbox for Topographic Change Analysis
+# r.dem - GRASS Addon Toolset for Topographic Change Analysis
 
 Archive snapshot of the r.dem toolset for citation (Zenodo DOI).
 
 The canonical, maintained source lives in the OSGeo grass-addons
-repository under `src/raster/r.dem`. This repository is a one-direction
-snapshot taken at manuscript submission; do not open pull requests here.
+repository under `src/raster/r.dem`, submitted as
+[grass-addons#1829](https://github.com/OSGeo/grass-addons/pull/1829).
+This repository is a one-direction snapshot taken at manuscript
+submission; do not open pull requests here.
 
 ## Tools
 
-r.dem.coregister, r.dem.nk, r.dem.icp, r.dem.stats, r.dem.bias,
-r.dem.lod, r.dem.change, r.dem.errprop, r.dem.screen. See `src/r.dem.md`
-for the toolbox overview.
+| Tool | Purpose |
+|---|---|
+| `r.dem.coregister` | PGCP vertical bias correction, optionally chaining Nuth and Kaab and ICP |
+| `r.dem.nk` | Nuth and Kaab (2011) horizontal and vertical co-registration |
+| `r.dem.icp` | Robust multi-scale point-to-plane ICP |
+| `r.dem.bias` | Systematic bias removal by regression, spline, or local trimmed median |
+| `r.dem.stats` | Terrain surface metrics used as DoD predictors |
+| `r.dem.lod` | Level of Detection, uniform and spatially variable |
+| `r.dem.change` | DoD with cleanup, LoD masking, and volumetric summary |
+| `r.dem.errprop` | Uncertainty propagation and significance classes |
+| `r.dem.screen` | Regional change screening |
+
+See `src/r.dem.md` for the toolset overview and `src/r_dem_examples.ipynb`
+for a worked example that runs on the GRASS North Carolina sample dataset
+and regenerates every figure in the manuals.
 
 ## Install
 
@@ -24,6 +38,23 @@ Or, once merged upstream:
 g.extension extension=r.dem
 ```
 
+## Tests
+
+```bash
+# pytest, synthetic data, no sample dataset needed
+grass --tmp-project XY --exec python -m pytest src/
+
+# gunittest, against the North Carolina sample dataset
+grass -c $GRASSDATA/nc_spm_full_v2alpha2/rdem_test --exec \
+    python -m unittest discover -s src/testsuite
+```
+
+## Credits
+
+The methods in `r.dem.stats`, `r.dem.bias`, and `r.dem.errprop` derive from
+GRASS scripts by Helena Mitasova, Center for Geospatial Analytics, NC State
+University, credited in each of those manual pages.
+
 ## Updating the snapshot
 
 ```bash
@@ -35,7 +66,7 @@ git push --follow-tags
 
 ## Citation
 
-See `CITATION.cff`. The associated manuscript is White, C.T. et al.
-(in preparation), Post-Hurricane Topographic Change Assessment Using
-Civil Air Patrol Aerial Imagery and Structure-from-Motion
-Photogrammetry, Remote Sensing (MDPI).
+See `CITATION.cff`. The associated manuscript is White, C.T., Regmi, P.,
+Reckling, W., and Mitasova, H. (in preparation), Volumetric Change
+Detection with SfM Photogrammetry from Rapid-Response Aerial Imagery after
+Hurricane Helene, Remote Sensing (MDPI).

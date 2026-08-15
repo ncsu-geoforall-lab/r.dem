@@ -5,6 +5,9 @@ set -e
 
 SRC="${1:-$HOME/Documents/GitHub/cwhite911/r-dem}"
 
-rsync -a --delete --exclude '__pycache__' "$SRC/src/raster/r.dem/" src/
+rsync -a --delete \
+  --exclude '__pycache__' --exclude '*.pyc' \
+  --exclude 'OBJ.*' --exclude '.ruff_cache' \
+  "$SRC/src/raster/r.dem/" src/
 cp "$SRC/LICENSE" LICENSE
 git status --short
