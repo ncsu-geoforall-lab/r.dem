@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: If you use this software, please cite it as below.
 title: "r.dem: GRASS addon toolset for DEM co-registration, differencing, and topographic change analysis"
 abstract: >-
-  r.dem is a toolset of nine GRASS addon tools for topographic change
+  r.dem is a toolset of ten GRASS addon tools for topographic change
   analysis from pairs of digital elevation models, such as a post-event
   photogrammetric surface against a pre-event lidar reference. It covers
   co-registration (pseudo ground control points, Nuth and Kaab, and
@@ -41,8 +41,8 @@ identifiers:
 license: GPL-2.0-or-later
 repository-code: https://github.com/ncsu-geoforall-lab/r.dem
 url: https://github.com/ncsu-geoforall-lab/r.dem
-version: 1.0.1
-date-released: 2026-08-15
+version: 1.1.0
+date-released: 2026-10-27
 references:
   - type: article
     title: "Volumetric Change Detection with SfM Photogrammetry from Rapid-Response Aerial Imagery after Hurricane Helene"

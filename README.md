@@ -1,14 +1,14 @@
 # r.dem - GRASS Addon Toolset for Topographic Change Analysis
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21940875.svg)](https://doi.org/10.5281/zenodo.21940875)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21940776.svg)](https://doi.org/10.5281/zenodo.21940776)
 
 Archive snapshot of the r.dem toolset for citation (Zenodo DOI).
 
 The canonical, maintained source lives in the OSGeo grass-addons
 repository under `src/raster/r.dem`, submitted as
 [grass-addons#1829](https://github.com/OSGeo/grass-addons/pull/1829).
-This repository is a one-direction snapshot taken at manuscript
-submission; do not open pull requests here.
+This repository holds versioned, one-direction snapshots of that
+source; do not open pull requests here.
 
 ## Tools
 
@@ -17,10 +17,11 @@ submission; do not open pull requests here.
 | `r.dem.coregister` | PGCP vertical bias correction, optionally chaining Nuth and Kaab and ICP |
 | `r.dem.nk` | Nuth and Kaab (2011) horizontal and vertical co-registration |
 | `r.dem.icp` | Robust multi-scale point-to-plane ICP |
+| `r.dem.dod` | DEM of Difference on the computational region, with grid alignment, palette, and metadata |
 | `r.dem.bias` | Systematic bias removal by regression, spline, or local trimmed median |
 | `r.dem.stats` | Terrain surface metrics used as DoD predictors |
 | `r.dem.lod` | Level of Detection, uniform and spatially variable |
-| `r.dem.change` | DoD with cleanup, LoD masking, and volumetric summary |
+| `r.dem.change` | Cleanup, LoD masking, and volumetric summary of a DoD |
 | `r.dem.errprop` | Uncertainty propagation and significance classes |
 | `r.dem.screen` | Regional change screening |
 
@@ -62,9 +63,8 @@ git push --follow-tags
 
 ## Citation
 
-Cite the version you used. This release is
-[10.5281/zenodo.21940777](https://doi.org/10.5281/zenodo.21940777); the
-concept DOI [10.5281/zenodo.21940776](https://doi.org/10.5281/zenodo.21940776)
+Cite the version you used. Each release has its own DOI on Zenodo, and
+the concept DOI [10.5281/zenodo.21940776](https://doi.org/10.5281/zenodo.21940776)
 always resolves to the latest release. Machine-readable metadata is in
 `CITATION.cff`.
 
