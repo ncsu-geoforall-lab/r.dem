@@ -38,6 +38,12 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.21940777
     description: DOI for version 1.0.0
+  - type: doi
+    value: 10.5281/zenodo.21940875
+    description: DOI for version 1.0.1
+  - type: doi
+    value: 10.5281/zenodo.23719842
+    description: DOI for version 1.1.0
 license: GPL-2.0-or-later
 repository-code: https://github.com/ncsu-geoforall-lab/r.dem
 url: https://github.com/ncsu-geoforall-lab/r.dem
